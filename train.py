@@ -17,7 +17,6 @@ from sklearn.model_selection import train_test_split
 
 import joblib
 
-# In[4]:
 
 
 train=pd.read_csv("https://raw.githubusercontent.com/ddgope/Udacity-Capstone-House-Price-Predication-Using-Azure-ML/master/house-price-train-data.csv")
@@ -29,13 +28,12 @@ test=pd.read_csv("https://raw.githubusercontent.com/ddgope/Udacity-Capstone-Hous
 train_len=len(train)
 
 ## Concat train and test data set
-df=pd.concat((train,test))
+df=pd.concat((train,test),sort=False)
 
 def missing_data(df):
     #Checking Null Values and get the Percentage of null values
     null_percent=df.isnull().sum()/df.shape[0]*100
 
-    # In[21]:
     col_for_drop=null_percent[null_percent > 50].keys()
 
     df=df.drop(col_for_drop,"columns")
@@ -122,37 +120,35 @@ from azureml.core.run import Run
 run = Run.get_context()
 
 
-# In[79]:
-
 
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--kernel', type=str, default='linear',help='Kernel type to be used in the algorithm')
-    parser.add_argument('--penalty', type=float, default=1.0, help='Penalty parameter of the error term')
+    # parser.add_argument('--kernel', type=str, default='linear',help='Kernel type to be used in the algorithm')
+    # parser.add_argument('--penalty', type=float, default=1.0, help='Penalty parameter of the error term')
 
     args = parser.parse_args()
-    run.log('Kernel type', np.str(args.kernel))
-    run.log('Penalty', np.float(args.penalty))
+    # run.log('Kernel type', np.str(args.kernel))
+    # run.log('Penalty', np.float(args.penalty))
    
     # X -> features, y -> label
     X, y = clean_data(df)
 
-    # dividing X, y into train and test data
-    X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
-
-    # training a xgboost Regression    
-    data_dmatrix =xgb.DMatrix(data=X,label=y)
+    # # training a xgboost Regression    
+    # data_dmatrix =xgb.DMatrix(data=X,label=y)
 
     X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=0.3)
     #print("Shapes of data: ", X_train.shape, X_test.shape, y_train.shape, y_test.shape)
+    import xgboost
+    classifier=xgboost.XGBRegressor()
+    classifier.fit(X_train,y_train)    
 
-    xg_reg1 = xgb.XGBRegressor(objective ='reg:squarederror', colsample_bytree = 0.3, learning_rate = 0.1,
-                max_depth = 5, alpha = 10, n_estimators = 10)
-    xg_reg1.fit(X_train,y_train)
+    # xgboost_model_regression = xgb.XGBRegressor(objective ='reg:squarederror', colsample_bytree = 0.3, learning_rate = 0.1,
+    #             max_depth = 5, alpha = 10, n_estimators = 10)
+    # xgboost_model_regression.fit(X_train,y_train)
 
-    preds=xg_reg1.predict(X_test)
-    #preds
+    preds=classifier.predict(X_test)
+    print(preds)
 
     rmse = np.sqrt(mean_squared_error(y_test, preds))
     print("RMSE: %f" % (rmse))
@@ -161,7 +157,7 @@ def main():
 
     os.makedirs('outputs', exist_ok=True)
     # files saved in the "outputs" folder are automatically uploaded into run history
-    joblib.dump(xgboost_model_regression, 'outputs/model.joblib')
+    joblib.dump(classifier, 'outputs/model.joblib')
  
 
 
