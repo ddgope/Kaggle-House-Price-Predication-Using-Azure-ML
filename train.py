@@ -150,7 +150,7 @@ def main():
 
     preds=xgboost_model_regression.predict(X_test)
     
-    Rsquare = xgboost_model_regression.score(x_test, y_test)
+    Rsquare = xgboost_model_regression.score(X_test, y_test)
     rmse = np.sqrt(mean_squared_error(y_test, preds))    
     
     run = Run.get_context()
