@@ -122,8 +122,11 @@ def clean_data(df):
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--max_depth', type=int, default=3, help="maximum depth of each tree that limits number of nodes")
-    parser.add_argument('--learning_rate', type=float, default=0.1, help="Factor by which each tree's contribution shrinks")
+    parser.add_argument('--max_depth', type=int, default=3, help="determines how deeply each tree is allowed to grow during any boosting round.")
+    parser.add_argument('--learning_rate', type=float, default=0.1, help="step size shrinkage used to prevent overfitting. Range is [0,1]")
+    parser.add_argument('--colsample_bytree', type=float, default=0.3, help="percentage of features used per tree. High value can lead to overfitting")
+    parser.add_argument('--alpha', type=int, default=10, help="L1 regularization on leaf weights. A large value leads to more regularization.")
+    parser.add_argument('--n_estimators', type=int, default=10, help="number of trees you want to build.")
     
     args = parser.parse_args()   
    
@@ -144,21 +147,28 @@ def main():
     #preds=classifier.predict(X_test)
     #print(preds)
 
-    xgboost_model_regression = xgb.XGBRegressor(max_depth=args.max_depth, learning_rate=args.learning_rate)
+    #objective: determines the loss function to be used like reg:linear for regression problems, 
+    #reg:logistic for classification problems with only decision, binary:logistic for classification problems with probability.
+
+    xgboost_model_regression = xgb.XGBRegressor(objective ='reg:linear',max_depth=args.max_depth, learning_rate=args.learning_rate, colsample_bytree=args.colsample_bytree, alpha=args.alpha, n_estimators=args.n_estimators)
     
     xgboost_model_regression.fit(X_train,y_train)
 
-    preds=xgboost_model_regression.predict(X_test)
-    
-    Rsquare = xgboost_model_regression.score(X_test, y_test)
+    preds=xgboost_model_regression.predict(X_test)    
+
     rmse = np.sqrt(mean_squared_error(y_test, preds))    
+
+    Rsquare = xgboost_model_regression.score(X_test, y_test)
     
     run = Run.get_context()
     
     run.log('mean squared error: ', np.float(rmse))                                            
     run.log("R-square: ", np.float(Rsquare))
-    run.log("Max depth: ", np.float(args.max_depth))
-    run.log("Learning rate: ", np.int(args.learning_rate))
+    run.log("Max depth: ", np.int(args.max_depth))
+    run.log("Learning rate: ",np.float(args.learning_rate))
+    run.log("colsample_bytree: ",np.float(args.colsample_bytree))
+    run.log("alpha: ", np.int(args.alpha))
+    run.log("n_estimators: ", np.int(n_estimators))
 
     os.makedirs('outputs', exist_ok=True)
     # files saved in the "outputs" folder are automatically uploaded into run history
