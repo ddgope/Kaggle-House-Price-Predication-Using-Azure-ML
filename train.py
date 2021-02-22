@@ -155,13 +155,13 @@ def main():
     
     run = Run.get_context()
     
-    run.log('mean squared error: ', np.float(rmse))                                            
-    run.log("R-square: ", np.float(Rsquare))
-    run.log("Max depth: ", np.int(args.max_depth))
-    run.log("Learning rate: ",np.float(args.learning_rate))
-    run.log("colsample_bytree: ",np.float(args.colsample_bytree))
-    run.log("alpha: ", np.int(args.alpha))
-    run.log("n_estimators: ", np.int(args.n_estimators))
+    run.log('mean_squared_error', np.float(rmse))                                            
+    run.log("R-square", np.float(Rsquare))
+    run.log("max_depth", np.int(args.max_depth))
+    run.log("learning_rate",np.float(args.learning_rate))
+    run.log("colsample_bytree",np.float(args.colsample_bytree))
+    run.log("alpha", np.int(args.alpha))
+    run.log("n_estimators", np.int(args.n_estimators))
 
     os.makedirs('outputs', exist_ok=True)
     # files saved in the "outputs" folder are automatically uploaded into run history
