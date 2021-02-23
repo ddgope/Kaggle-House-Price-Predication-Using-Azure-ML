@@ -167,7 +167,7 @@ def main():
     # files saved in the "outputs" folder are automatically uploaded into run history
     joblib.dump(xgboost_model_regression, 'outputs/model.joblib')
  
-
+    #https://towardsdatascience.com/how-to-deploy-a-local-ml-model-as-a-web-service-on-azure-machine-learning-studio-5eb788a2884c
 
 if __name__ == '__main__':
     main()
