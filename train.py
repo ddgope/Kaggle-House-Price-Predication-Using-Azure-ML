@@ -20,6 +20,8 @@ from azureml.core.run import Run
 from azureml.data.dataset_factory import TabularDatasetFactory
 from azureml.core import Workspace, Dataset
 
+#https://docs.microsoft.com/en-us/learn/modules/work-with-data-in-aml/5-using-datasets
+
 train=pd.read_csv("https://raw.githubusercontent.com/ddgope/Udacity-Capstone-House-Price-Predication-Using-Azure-ML/master/house-price-train-data.csv")
 test=pd.read_csv("https://raw.githubusercontent.com/ddgope/Udacity-Capstone-House-Price-Predication-Using-Azure-ML/master/house-price-test-data.csv")
 train_len=len(train)
