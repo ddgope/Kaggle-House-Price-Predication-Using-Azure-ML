@@ -106,6 +106,8 @@ def clean_data(df):
     df_Train=final_df[:train_len]
     df_Test=final_df[train_len:]
 
+    #save the test data into testdata.csv and upload into git to call in After Model Deployment to test the model
+    df_Test.to_csv('./testdata.csv')
    # print(df_Train.shape)
     #print(df_Test.shape)
 
@@ -167,7 +169,7 @@ def main():
 
     os.makedirs('outputs', exist_ok=True)
     # files saved in the "outputs" folder are automatically uploaded into run history
-    joblib.dump(xgboost_model_regression, 'outputs/model.joblib')
+    joblib.dump(xgboost_model_regression, 'outputs/house_price_model.pkl')
  
     #https://towardsdatascience.com/how-to-deploy-a-local-ml-model-as-a-web-service-on-azure-machine-learning-studio-5eb788a2884c
 
