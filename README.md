@@ -12,6 +12,8 @@ we will first compare the accuracy of AutoML vs HyperConfig's hyperparameter tun
 
 The schematic below illustrates the path that is detailed in the rest of this write-up
 
+![Project Workflow](img/Project_workflow.JPG?raw=true "Project Workflow") 
+
 ## Project Set Up and Installation
 To set up this project in AzureML, please:
 
@@ -30,6 +32,8 @@ env.yml: the environment file which is also downloaded from within Azure Machine
 
 ## Dataset
 
+The dataset used is taken from [Kaggle](https://www.kaggle.com/c/house-prices-advanced-regression-techniques/data) 
+
 ### File Description: This is Kaggle Competation. Downloaded from Kaggle.
 * train.csv - the training set
 * test.csv - the test set
@@ -40,26 +44,26 @@ env.yml: the environment file which is also downloaded from within Azure Machine
 Here's a brief vabout data description file.
 * SalePrice - the property's sale price in dollars. This is the target variable that you're trying to predict.
 * MSSubClass: The building class
-MSZoning: The general zoning classification
-LotFrontage: Linear feet of street connected to property
-LotArea: Lot size in square feet
-Street: Type of road access
-Alley: Type of alley access
-LotShape: General shape of property
-LandContour: Flatness of the property
-Utilities: Type of utilities available
-LotConfig: Lot configuration
-LandSlope: Slope of property
-Neighborhood: Physical locations within Ames city limits
-Condition1: Proximity to main road or railroad
-Condition2: Proximity to main road or railroad (if a second is present)
-BldgType: Type of dwelling
-HouseStyle: Style of dwelling
-OverallQual: Overall material and finish quality
-OverallCond: Overall condition rating
-YearBuilt: Original construction date
-YearRemodAdd: Remodel date
-RoofStyle: Type of roof
+* MSZoning: The general zoning classification
+* LotFrontage: Linear feet of street connected to property
+* LotArea: Lot size in square feet
+* Street: Type of road access
+* Alley: Type of alley access
+* LotShape: General shape of property
+* LandContour: Flatness of the property
+* Utilities: Type of utilities available
+* LotConfig: Lot configuration
+* LandSlope: Slope of property
+* Neighborhood: Physical locations within Ames city limits
+* Condition1: Proximity to main road or railroad
+* Condition2: Proximity to main road or railroad (if a second is present)
+* BldgType: Type of dwelling
+* HouseStyle: Style of dwelling
+* OverallQual: Overall material and finish quality
+* OverallCond: Overall condition rating
+* YearBuilt: Original construction date
+* YearRemodAdd: Remodel date
+* RoofStyle: Type of roof
 RoofMatl: Roof material
 Exterior1st: Exterior covering on house
 Exterior2nd: Exterior covering on house (if more than one material)
