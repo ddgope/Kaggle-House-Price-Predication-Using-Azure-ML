@@ -6,22 +6,40 @@ It is my job to predict the sales price for each house. For each Id in the test 
 *Metric
 Submissions are evaluated on Root-Mean-Squared-Error (RMSE) between the logarithm of the predicted value and the logarithm of the observed sales price. (Taking logs means that errors in predicting expensive houses and cheap houses will affect the result equally.)
 
+I create two models in the environment of Azure Machine Learning Studio: one using Automated Machine Learning (i.e. AutoML) and one customized model uisng Python SDK whose hyperparameters are tuned using HyperDrive. I then compare the performance of both models and deploy the best performing model as a service using Azure Container Instances (ACI).
+
+we will first compare the accuracy of AutoML vs HyperConfig's hyperparameter tuning of a XGBOOST Regressor in predicting house price given certain details about the house. We will then deploy the most accurate model to get an active endpoint that can be queried using those details to return a predicted house price.
+
+The schematic below illustrates the path that is detailed in the rest of this write-up
 
 ## Project Set Up and Installation
-*OPTIONAL:* If your project has any special installation steps, this is where you should put it. To turn this project into a professional portfolio project, you are encouraged to explain how to set up this project in AzureML.
+To set up this project in AzureML, please:
+
+download the Auto MPG dataset and register as a dataset in Azure ML studio under the name 'mpg'
+
+In order to run the project in Azure Machine Learning Studio, we will need the two Jupyter Notebooks:
+
+automl.ipynb: for the AutoML experiment;
+hyperparameter_tuning.ipynb: for the HyperDrive experiment.
+The following files are also necessary:
+
+heart_failure_clinical_records_dataset.csv: the dataset file. It can also be taken directly from Kaggle;
+train.py: a basic script for manipulating the data used in the HyperDrive experiment;
+scoring_file_v_1_0_0.py: the script used to deploy the model which is downloaded from within Azure Machine Learning Studio; &
+env.yml: the environment file which is also downloaded from within Azure Machine Learning Studio.
 
 ## Dataset
 
 ### File Description: This is Kaggle Competation. Downloaded from Kaggle.
-train.csv - the training set
-test.csv - the test set
-data_description.txt - full description of each column, originally prepared by Dean De Cock but lightly edited to match the column names used here
-sample_submission.csv - a benchmark submission from a linear regression on year and month of sale, lot square footage, and number of bedrooms
+* train.csv - the training set
+* test.csv - the test set
+* data_description.txt - full description of each column, originally prepared by Dean De Cock but lightly edited to match the column names used here
+* sample_submission.csv - a benchmark submission from a linear regression on year and month of sale, lot square footage, and number of bedrooms
 
 ### Data Fileds
 Here's a brief vabout data description file.
-SalePrice - the property's sale price in dollars. This is the target variable that you're trying to predict.
-MSSubClass: The building class
+* SalePrice - the property's sale price in dollars. This is the target variable that you're trying to predict.
+* MSSubClass: The building class
 MSZoning: The general zoning classification
 LotFrontage: Linear feet of street connected to property
 LotArea: Lot size in square feet
