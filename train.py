@@ -153,14 +153,24 @@ def main():
 
     preds=xgboost_model_regression.predict(X_test)    
 
+    --RMSE
     rmse = np.sqrt(mean_squared_error(y_test, preds))    
+    
+    --MSE
+    mse = mean_squared_error(y_test, preds)
 
+    --MAE
+    mae=metrics.mean_absolute_error(y_test, preds))
+    
     Rsquare = xgboost_model_regression.score(X_test, y_test)
     
-    run = Run.get_context()
-    
-    run.log('mean_squared_error', np.float(rmse))                                            
+    run = Run.get_context()    
+
+    run.log('mean_squared_error', np.float(rmse))    
+    run.log('mean_squared_error', np.float(mse))    
+    run.log('mean_absolute_error', np.float(mae))    
     run.log("R-square", np.float(Rsquare))
+    
     run.log("max_depth", np.int(args.max_depth))
     run.log("learning_rate",np.float(args.learning_rate))
     run.log("colsample_bytree",np.float(args.colsample_bytree))
