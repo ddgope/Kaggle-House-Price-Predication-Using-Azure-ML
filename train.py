@@ -16,16 +16,35 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 import xgboost as xgb
 
-from azureml.core.run import Run
+import azureml.core
+from azureml.core import Workspace, Datastore,Dataset
 from azureml.data.dataset_factory import TabularDatasetFactory
-from azureml.core import Workspace, Dataset
+from azureml.core.run import Run
+
+
+# subscription_id = '9b72f9e6-56c5-4c16-991b-19c652994860'
+# resource_group = 'aml-quickstarts-139721'
+# workspace_name = 'quick-starts-ws-139721'
+
+# workspace = Workspace(subscription_id, resource_group, workspace_name)
+ws = Workspace.from_config()
 
 #https://docs.microsoft.com/en-us/learn/modules/work-with-data-in-aml/5-using-datasets
 
-train=pd.read_csv("https://raw.githubusercontent.com/ddgope/Udacity-Capstone-House-Price-Predication-Using-Azure-ML/master/house-price-train-data.csv")
-test=pd.read_csv("https://raw.githubusercontent.com/ddgope/Udacity-Capstone-House-Price-Predication-Using-Azure-ML/master/house-price-test-data.csv")
-train_len=len(train)
+# train=pd.read_csv("https://raw.githubusercontent.com/ddgope/Kaggle-House-Price-Predication-Using-Azure-ML/master/house-price-train-data.csv")
+# test=pd.read_csv("https://raw.githubusercontent.com/ddgope/Kaggle-House-Price-Predication-Using-Azure-ML/master/house-price-test-data.csv")
+# train=pd.read_csv("house-price-train-data.csv")
+# test=pd.read_csv("./house-price-test-data.csv")
 
+dataset = Dataset.get_by_name(ws, name='house price train data')
+train=dataset.to_pandas_dataframe()
+#train.shape
+
+dataset = Dataset.get_by_name(ws, name='house price test data')
+test=dataset.to_pandas_dataframe()
+#test.shape
+
+train_len=len(train)
 ## Concat train and test data set
 df=pd.concat((train,test),sort=False)
 
@@ -153,22 +172,15 @@ def main():
 
     preds=xgboost_model_regression.predict(X_test)    
 
-    --RMSE
-    rmse = np.sqrt(mean_squared_error(y_test, preds))    
-    
-    --MSE
-    mse = mean_squared_error(y_test, preds)
-
-    --MAE
-    mae=metrics.mean_absolute_error(y_test, preds))
+    #RMSE
+    rmse = np.sqrt(mean_squared_error(y_test, preds))        
+ 
     
     Rsquare = xgboost_model_regression.score(X_test, y_test)
     
     run = Run.get_context()    
 
-    run.log('mean_squared_error', np.float(rmse))    
-    run.log('mean_squared_error', np.float(mse))    
-    run.log('mean_absolute_error', np.float(mae))    
+    run.log('mean_squared_error', np.float(rmse))       
     run.log("R-square", np.float(Rsquare))
     
     run.log("max_depth", np.int(args.max_depth))
